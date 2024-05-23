@@ -1,4 +1,39 @@
-<?php //phpinfo() ?>
+<?php
+require_once '../admin/connection.inc.php';
+$db = new dbConnector();
+$msg = "";
+// echo $_POST['submit'];
+if(isset($_POST['submit'])){
+   $username = $_POST['username'];
+   $password = $_POST['password'];
+   if(!empty($username) && !empty($password)){
+    try{
+      $password = md5($password);
+      $sql = "select * from users where username=:username and userpwd=:password";
+      $params = ["username"=>$username,"password"=>$password];
+      $userExists = $db->isDataExists($sql,$params);
+      // $stmt= $db->prepare($sql);
+      // $stmt->execute(["username"=>$username,"password"=>$password]);
+      if($userExists === true){
+         session_start();
+         $_SESSION['username'] = $username;
+         $_SESSION['islogin'] = true;
+         print_r($_SESSION);
+         header("location:home.php");
+      }
+      else{
+         $msg = 'login failed! Enter valid username and password';
+      }
+       
+    } 
+    catch(PDOException $e){
+      echo 'data error'.$e->getMessage();
+    } 
+   }
+}
+   
+?>
+
 <!doctype html>
 <html class="no-js" lang="">
    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
@@ -21,17 +56,22 @@
       <div class="sufee-login d-flex align-content-center flex-wrap">
          <div class="container">
             <div class="login-content">
-            <div class="login-form mt-150">
-                
-                    
-                     <a href="login.php" class="btn btn-success btn-flat m-b-30 m-t-30">Sign in</a>
-           <br/><br/>
-                     <a href="register.php" class="btn btn-success btn-flat m-b-30 m-t-30">Register</a>
-					
-            </div>
+               <div class="login-form mt-150">
+                  <form method="post">
+                     <div class="form-group">
+                        <label>User Name</label>
+                        <input type="text" name ="username" class="form-control" placeholder="User Name">
+                     </div>
+                     <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" name="password" class="form-control" placeholder="Password">
+                     </div>
+                     <button type="submit" name="submit" class="btn btn-success btn-flat m-b-30 m-t-30">Sign in</button>
+                     <div class="errmss"><?php echo $msg?></div>
+					</form>
+               </div>
             </div>
          </div>
-       
       </div>
       <script src="assets/js/vendor/jquery-2.1.4.min.js" type="text/javascript"></script>
       <script src="assets/js/popper.min.js" type="text/javascript"></script>

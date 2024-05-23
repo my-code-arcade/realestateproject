@@ -1,7 +1,7 @@
 <?php
 class dbConnector{
   private  $servername = 'localhost';
-  private  $dbname = 'rkindustries';
+  private  $dbname = 'realestatedb';
   private  $username = 'root';
   private  $password = '';
   private $conn;
@@ -24,6 +24,8 @@ class dbConnector{
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
     if($stmt->rowCount()>0){
         return $result;
+    }else{
+      return [];
     }
   }
   /**
