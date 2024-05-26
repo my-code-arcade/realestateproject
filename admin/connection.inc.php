@@ -2,6 +2,7 @@
 class dbConnector{
   private  $servername = 'localhost';
   private  $dbname = 'realestatedb';
+  // private  $dbname = 'rkindustries';
   private  $username = 'root';
   private  $password = '';
   private $conn;

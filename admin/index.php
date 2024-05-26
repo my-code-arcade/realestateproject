@@ -8,8 +8,11 @@ if(isset($_POST['submit'])){
    $password = $_POST['password'];
    if(!empty($username) && !empty($password)){
     try{
-      $password = md5($password);
-      $sql = "select * from users where username=:username and userpwd=:password";
+      //forrealstate
+      // $password = md5($password);
+      // $sql = "select * from users where username=:username and userpwd=:password";
+      //end
+      $sql = "select * from login where user_name=:username and password=:password";
       $params = ["username"=>$username,"password"=>$password];
       $userExists = $db->isDataExists($sql,$params);
       // $stmt= $db->prepare($sql);

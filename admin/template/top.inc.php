@@ -44,7 +44,7 @@
                      <a href="unitmaster.php" > Unit Master</a>
                   </li>
 				      <li class="menu-item-has-children dropdown">
-                     <a href="#" > Vendor Master</a>
+                     <a href="product.php" > Product Master</a>
                   </li>
                   <li class="menu-item-has-children dropdown">
                      <a href="#" > Vendor Master</a>

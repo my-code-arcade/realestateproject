@@ -10,7 +10,7 @@ require('../admin/template/top.inc.php');
             <div class="col-xl-12">
                 <div class="card">
                     <div class="card-body">
-                        <h3 class="font-weight-bold">UNIT MASTER</h3>
+                        <h3 class="font-weight-bold">PRODUCT MASTER</h3>
                     </div>
                     <button type="button" class="btn btn-primary" style="margin:20px;" data-toggle="modal" data-target="#myModal">
                         Create New
@@ -25,25 +25,32 @@ require('../admin/template/top.inc.php');
                                         <!-- Modal Header -->
                                         <div class="modal-header">
                                             <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                            <h4 class="modal-title">Add Unit</h4>
+                                            <h4 class="modal-title">Add Product</h4>
                                         </div>
                                         <!-- Modal body -->
-                                        <form action="" method="post" id="unitForm">
+                                        <form action="" method="post" id="unitForm12">
                                             <div class="modal-body">
 
                                                 <input type="hidden" id="modalid" name="id" value="" />
                                                 <div class="form-group">
-                                                    <label for="unitname">Unit</label>
-                                                    <input class="form-control yearlimit modalyearfrom" type="text" placeholder="Enter Unit" id="unitname" name="unitname" required>
+                                                    <label for="heading">Heading</label>
+                                                    <input class="form-control" type="text" placeholder="Enter Heading" id="headingId" name="headingName" required>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="Status">Status</label>
-                                                    <select class="form-control modalyearstatus" name="status" id="status">
-                                                        <option value="" selected>Select</option>
-                                                        <option value="1">Active</option>
-                                                        <option value="0">Inactive</option>
-                                                    </select>
+                                                    <label for="unitname">Sub Heading</label>
+                                                    <input class="form-control" type="text" placeholder="Enter Unit" id="subHeadingId" name="subHeadingName" required>
                                                 </div>
+                                                <div class="form-group">
+                                                    <label for="productfile">File Upload</label>
+                                                    <input class="form-control"  type="file" placeholder="Enter Image" id="fileUploadId" name="fileUploadName" required>
+                                                </div>
+                                                <div id="preview">
+                                                    <h3>Image Preview</h3>
+                                                    <div id="image_preview">
+
+                                                    </div>
+                                                </div>
+                                               
                                             </div>
                                         
                                         <!-- Modal footer -->
@@ -52,7 +59,8 @@ require('../admin/template/top.inc.php');
                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                         </div>
                                         </form>
-                                        <div class="alert alert-dark" id="hmsg" style="display:none;"></div>
+                                        <div id="msg"></div>
+                                       
                                     </div>
                                 </div>
                             </div>
@@ -76,8 +84,9 @@ require('../admin/template/top.inc.php');
                                     <tr>
                                         <th class="serial">#</th>
                                         <th>ID</th>
-                                        <th>UNIT</th>
-                                        <th>STATUS</th>
+                                        <th>HEADING</th>
+                                        <th>SUBHEADING</th>
+                                        <TH>FILE SOURCE</TH>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -93,6 +102,6 @@ require('../admin/template/top.inc.php');
     </div>
 </div>
 <?php require('../admin/template/footer.inc.php') ?>
-<script src="assets/js/unitmaster.js" type="text/javascript"></script>
+<script src="assets/js/product.js" type="text/javascript"></script>
 </body>
 </html>
