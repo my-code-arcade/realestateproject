@@ -18,14 +18,20 @@ if ($_POST['action'] == "load") {
         if (isset($result)) {
             foreach ($result as $row) {
                // $jsonArray = json_encode(($row));
-      
+       $isActive = $row["isActive"] == 0 ? 'InActive' : 'Active';
 
             $output .= "<tr>
                         <td>{$sr}</td>
                         <td>{$row["id"]}</td>
                         <td>{$row["heading"]}</td>
                         <td>{$row["subheading"]}</td>
-                        <td><img  class='rounded-circle' src = '{$row['imgsource']}' alt='Cinque Terre'></td>
+                        <td><img  class='rounded-circle' src = '{$row['imgsource']}' alt='No Image'></td>
+                        <td>{$row["building_area"]}</td>
+                        <td>{$row["bedrooms"]}</td>
+                        <td>{$row["bathroom"]}</td>
+                        <td>{$row["flat_type"]}</td>
+                        <td>{$isActive}</td>
+                       
                         <td><button class='btn btn-danger unitDelete' data-id={$row["id"]}>Delete</button>
                             <button class='btn btn-info unitEdit' data-toggle='modal' data-target='#myModal1' data-id={$row["id"]} >Edit</button></td>
                         </tr>";
@@ -64,12 +70,16 @@ if ($_POST['action'] == "insert") {
             } else {
                 if (move_uploaded_file($tempFilePath, $destinationFilePath)) {
                     //$sql = "insert into product(heading,subheading,imgsource,isActive) values('{$_POST['headingName']}', '{}','$destinationFilePath')";
-                    $query = "INSERT INTO product (heading,subheading,imgsource,isActive)  VALUES (:heading, :subHeading, :imgSource, :isActive)";
+                    $query = "INSERT INTO product (heading,subheading,imgsource,isActive,building_area,bedrooms,bathroom,flat_type)  VALUES (:heading, :subHeading, :imgSource, :isActive,:buildingArea,  :bedRoom, :bathRoom, :flatType)";
                     $param = [
                         "heading" => $_POST['headingName'], 
                         "subHeading" => $_POST['subHeadingName'],
-                        "imgSource"=> $destinationFilePath, 
-                        "isActive"=> 1, 
+                        "imgSource" => $destinationFilePath, 
+                        "isActive" => 1, 
+                        "buildingArea" => $_POST['buildingArea']?  $_POST['buildingArea']: null,
+                        "bedRoom" => $_POST['bedRooms'],
+                        "bathRoom" => $_POST['bathRooms'],
+                        "flatType" => $_POST['flatType'] ? $_POST['flatType'] : null,
                     
                     ];
                     $insertedId = $conn->insertData($query, $param);

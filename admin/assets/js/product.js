@@ -56,10 +56,9 @@ jQuery(document).ready(function ($) {
             data: { action: uaction, id: uid },
             success: function (result) {
                 if (result == 1) {
-                    console.log("de;lllllll");
                     alert("Succesfully Deleted");
-                   // $(element).closest("tr").fadeOut();
-                  //  load_table();
+                   $(element).closest("tr").fadeOut();
+                    load_table();
                   
                 } else {
                     alert("can't delete");

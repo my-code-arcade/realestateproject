@@ -44,6 +44,46 @@ require('../admin/template/top.inc.php');
                                                     <label for="productfile">File Upload</label>
                                                     <input class="form-control"  type="file" placeholder="Enter Image" id="fileUploadId" name="fileUploadName" required>
                                                 </div>
+                                                <div class="form-group">
+                                                    <label for="buildingArea">Building Area</label>
+                                                    <input class="form-control" type="text" placeholder="Enter Area" id="aresId" name="buildingArea">
+                                                </div>
+                                                
+                                                <div class="form-group">
+                                                    <label for="bedrooms">Bedrooms</label>
+                                                    <select class="form-control modalyearstatus" name="bedRooms" id="bedroomsId" required>
+                                                        <option value="0">0</option>
+                                                        <option value="1">1</option>
+                                                        <option value="2">2</option>
+                                                        <option value="2">3</option>
+                                                        <option value="4">4</option>
+                                                        <option value="5">5</option>
+                                                    </select>
+                                                </div>
+                                               
+                                                <div class="form-group">
+                                                    <label for="bathRooms">Bathrooms</label>
+                                                    <select class="form-control modalyearstatus" name="bathRooms" id="bathroomsId" required>
+                                                        <option value="0">0</option>
+                                                        <option value="1">1</option>
+                                                        <option value="2">2</option>
+                                                        <option value="2">3</option>
+                                                        <option value="4">4</option>
+                                                        <option value="5">5</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="flatType">Flat Type</label>
+                                                    <input class="form-control" type="text" placeholder="Enter Flat Type" id="flatTypeId" name="flatType">
+                                                </div>
+                                                
+                                                <div class="form-group">
+                                                    <label for="Status">Status</label>
+                                                    <select class="form-control modalyearstatus" name="status" id="status" required>
+                                                        <option value="0">Inactive</option>
+                                                        <option value="1">Active</option>
+                                                    </select>
+                                                </div>
                                                 <div id="preview">
                                                     <h3>Image Preview</h3>
                                                     <div id="image_preview">
@@ -87,6 +127,11 @@ require('../admin/template/top.inc.php');
                                         <th>HEADING</th>
                                         <th>SUBHEADING</th>
                                         <TH>FILE SOURCE</TH>
+                                        <TH>BUILDING AREA</TH>
+                                        <TH>BEDROOMS</TH>
+                                        <TH>BATHROOMS</TH>
+                                        <TH>FLAT TYPE</TH>
+                                        <TH>IS ACTIVE</TH>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
