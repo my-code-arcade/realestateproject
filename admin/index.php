@@ -1,7 +1,11 @@
 <?php
+session_start();
 require_once '../admin/connection.inc.php';
 $db = new dbConnector();
 $msg = "";
+if(isset( $_SESSION['islogin'])){
+   header("location:home.php");
+}
 // echo $_POST['submit'];
 if(isset($_POST['submit'])){
    $username = $_POST['username'];
@@ -9,16 +13,16 @@ if(isset($_POST['submit'])){
    if(!empty($username) && !empty($password)){
     try{
       //forrealstate
-      // $password = md5($password);
-      // $sql = "select * from users where username=:username and userpwd=:password";
+      $password = md5($password);
+      $sql = "select * from users where username=:username and userpwd=:password";
       //end
-      $sql = "select * from login where user_name=:username and password=:password";
+     // $sql = "select * from login where user_name=:username and password=:password";
       $params = ["username"=>$username,"password"=>$password];
       $userExists = $db->isDataExists($sql,$params);
       // $stmt= $db->prepare($sql);
       // $stmt->execute(["username"=>$username,"password"=>$password]);
       if($userExists === true){
-         session_start();
+       
          $_SESSION['username'] = $username;
          $_SESSION['islogin'] = true;
          print_r($_SESSION);

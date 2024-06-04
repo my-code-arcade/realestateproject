@@ -1,4 +1,10 @@
 <!doctype html>
+<?php session_start();
+if(!$_SESSION['username']){
+   header('location:index.php');
+}
+
+?>
 <html class="no-js" lang="">
    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
    <head>
@@ -74,10 +80,10 @@
             <div class="top-right">
                <div class="header-menu">
                   <div class="user-area dropdown float-right">
-                     <a href="#" class="dropdown-toggle active" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Welcome Admin</a>
+                     <a href="#" class="dropdown-toggle active" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Welcome <?php echo ucfirst($_SESSION['username'])  ?></a>
                      <div class="user-menu dropdown-menu">
                         <!-- <a class="nav-link" href="#"><i class="fa fa-power-off"></i>Logout</a> -->
-                        <a class="nav-link" href="logout.php"><i class="fa fa-power-off"></i>Logout</a>
+                        <a class="nav-link" href="./logout.php"><i class="fa fa-power-off"></i>Logout</a>
                      </div>
                   </div>
                </div>
