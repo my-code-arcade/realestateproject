@@ -20,6 +20,7 @@ jQuery(document).ready(function ($) {
         e.preventDefault();
         var formData = new FormData(this);
         formData.append('action', 'insert');
+console.log("formData==",formData);
         $.ajax({
             url: "product_controller.php",
             type: "POST",
@@ -28,7 +29,8 @@ jQuery(document).ready(function ($) {
             processData: false,
             dataType: 'json',
             success: function (result) {
-                console.log(result);
+                console.log("js result==",result);
+               // console.log(result);
                 if (result.duplicate) {
                     $("#msg").fadeIn().removeClass('sucess-msg').addClass('error-msg').html("Duplicate Record Detected: Please Make Changes.");
                 } else if (result.success) {

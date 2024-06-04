@@ -1,15 +1,26 @@
 <?php
-$dsn = "mysql:host=localhost;dbname=rkindustries;";
-$username = "root";
-$password = "";
+// $dsn = "mysql:host=localhost;dbname=rkindustries;";
+// $username = "root";
+// $password = "";
+
+
+require_once '../admin/connection.inc.php';
+$conn = new dbConnector();
+if ( ! $conn ) {
+   die( 'Could not connect: ' . mysql_error() );
+} 
 $output = "";
 if ($_POST['action'] == "load") {
     try {
-        $conn = new PDO($dsn, $username, $password);
-        $sql = "SELECT * FROM product";
-        $result = $conn->query($sql);
+        $selectAllQuery = "SELECT * FROM product";
+        $result = $conn->readData($selectAllQuery,[]);
         $sr = 1;
-        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+        echo "rrr===";
+        print_r($result);
+        if (isset($result)) {
+            foreach ($result as $row) {
+               // $jsonArray = json_encode(($row));
+      
 
             $output .= "<tr>
                         <td>{$sr}</td>
@@ -21,6 +32,7 @@ if ($_POST['action'] == "load") {
                             <button class='btn btn-info unitEdit' data-toggle='modal' data-target='#myModal1' data-id={$row["id"]} >Edit</button></td>
                         </tr>";
             $sr++;
+            }
         }
     } catch (PDOException $e) {
         echo "Connection failed: " . $e->getMessage();
@@ -30,21 +42,40 @@ if ($_POST['action'] == "load") {
 
 if ($_POST['action'] == "insert") {
     try {
-        $conn = new PDO($dsn, $username, $password);
+       
         if ($_FILES['fileUploadName']['name'] != '') {
             $filename = $_FILES['fileUploadName']['name'];
+           // echo "fileName==".$filename;
             $tempFilePath = $_FILES['fileUploadName']['tmp_name']; // Temporary file path
             $extension = pathinfo($filename, PATHINFO_EXTENSION);
-            $path = "images/";
-            $destinationFilePath = $path . $filename; // Full destination file path
+            $path = "uploads/product/";
+            if (!is_dir($path) ) {
+                die("Directory does not exist .");
+            }
+            if( !is_writable($path)){
+                die("Directory not writable .");
+
+            }
+
+            $destinationFilePath = $path.$filename; // Full destination file path
+            //echo "filepath=".$destinationFilePath;
             $sql = "select * from product where heading = '{$_POST['headingName']}'";
-            $result = $conn->query($sql);
-            if ($result->rowCount() > 0) {
+            $count = $conn->readSingleRecord($sql);
+            if (count($count) > 0) {
                 echo json_encode(array('duplicate' => true));
             } else {
                 if (move_uploaded_file($tempFilePath, $destinationFilePath)) {
-                    $sql = "insert into product(heading,subheading,imgsource) values('{$_POST['headingName']}', '{$_POST['subHeadingName']}','$destinationFilePath')";
-                    if ($conn->query($sql)) {
+                    //$sql = "insert into product(heading,subheading,imgsource,isActive) values('{$_POST['headingName']}', '{}','$destinationFilePath')";
+                    $query = "INSERT INTO product (heading,subheading,imgsource,isActive)  VALUES (:heading, :subHeading, :imgSource, :isActive)";
+                    $param = [
+                        "heading" => $_POST['headingName'], 
+                        "subHeading" => $_POST['subHeadingName'],
+                        "imgSource"=> $destinationFilePath, 
+                        "isActive"=> 1, 
+                    
+                    ];
+                    $insertedId = $conn->insertData($query, $param);
+                    if ($insertedId) {
                         echo json_encode(array('success' => true));
                     } else {
                         echo json_encode(array('success' => false));
@@ -63,7 +94,6 @@ if ($_POST['action'] == "insert") {
 if ($_POST['action'] == "delete") {
     try {
         $id = $_POST['id'];
-        $conn = new PDO($dsn, $username, $password);
         $sql = "delete from product where id = '{$id}'";
         if ($conn->query($sql)) {
             echo 1;
@@ -78,7 +108,6 @@ if ($_POST['action'] == "delete") {
 if ($_POST['action'] == "edit") {
     try {
         $id = $_POST['id'];
-        $conn = new PDO($dsn, $username, $password);
         $sql = "select * from product where id  = {$id}";
         $result = $conn->query($sql);
         $output = " <div class='modal-dialog modal-dialog-centered'>
@@ -123,7 +152,6 @@ if ($_POST['action'] == "edit") {
 if ($_POST['action'] == "update") {
     try {
         $id = $_POST['id'];
-        $conn = new PDO($dsn, $username, $password);
         $sql = "update tbl_unit set unit = '{$_POST['unit']}', status='{$_POST['status']}' where id  = {$id}";
         if ($conn->query($sql)) {
             echo 1;
