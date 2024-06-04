@@ -14,13 +14,12 @@ jQuery(document).ready(function ($) {
             }
         });
     }
-    load_table();
+   load_table();
 
     $("#unitForm12").on("submit", function (e) {
         e.preventDefault();
         var formData = new FormData(this);
         formData.append('action', 'insert');
-console.log("formData==",formData);
         $.ajax({
             url: "product_controller.php",
             type: "POST",
@@ -29,20 +28,19 @@ console.log("formData==",formData);
             processData: false,
             dataType: 'json',
             success: function (result) {
-                console.log("js result==",result);
-               // console.log(result);
+                console.log(result);
                 if (result.duplicate) {
                     $("#msg").fadeIn().removeClass('sucess-msg').addClass('error-msg').html("Duplicate Record Detected: Please Make Changes.");
                 } else if (result.success) {
-                    $("#msg").fadeIn().removeClass('error-msg').addClass('sucess-msg').html("Save successful: Your record has been successfully saved.");
-                    load_table(); // Assuming this function loads the table data
+                    $("#msg").fadeIn().removeClass('error-msg').addClass('sucess-msg').html("Saved successful: Your record has been successfully saved.");
+                   load_table(); // Assuming this function loads the table data
                 } else {
                     $("#msg").fadeIn().removeClass('sucess-msg').addClass('error-msg').html("Save Failed: Record Not Saved.");
                 }
                 setTimeout(function () {
                     $("#msg").fadeOut("slow");
                     $("#unitForm12").trigger("reset");
-                }, 2000);
+                }, 5000);
             }
         });
     });
@@ -58,8 +56,11 @@ console.log("formData==",formData);
             data: { action: uaction, id: uid },
             success: function (result) {
                 if (result == 1) {
-                    $(element).closest("tr").fadeOut();
-                    load_table();
+                    console.log("de;lllllll");
+                    alert("Succesfully Deleted");
+                   // $(element).closest("tr").fadeOut();
+                  //  load_table();
+                  
                 } else {
                     alert("can't delete");
                 }

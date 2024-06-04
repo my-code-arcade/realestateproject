@@ -1,12 +1,17 @@
 <?php
-$dsn = "mysql:host=localhost;dbname=rkindustries;";
-$username = "root";
-$password = "";
-$output = "";
+require_once '../admin/connection.inc.php';
+// $dsn = "mysql:host=localhost;dbname=rkindustries;";
+// $username = "root";
+// $password = "";
+// $output = "";
+
+$conn = new dbConnector();
+if ( ! $conn ) {
+   die( 'Could not connect: ' . mysql_error() );
+} 
 if ($_POST['action'] == "load") {
     try {
-        $conn = new PDO($dsn, $username, $password);
-        $sql = "SELECT * FROM tbl_unit";
+        $sql = "SELECT * FROM product";
         $result = $conn->query($sql);
         $sr = 1;
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {

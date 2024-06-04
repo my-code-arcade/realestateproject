@@ -15,8 +15,6 @@ if ($_POST['action'] == "load") {
         $selectAllQuery = "SELECT * FROM product";
         $result = $conn->readData($selectAllQuery,[]);
         $sr = 1;
-        echo "rrr===";
-        print_r($result);
         if (isset($result)) {
             foreach ($result as $row) {
                // $jsonArray = json_encode(($row));
@@ -94,8 +92,12 @@ if ($_POST['action'] == "insert") {
 if ($_POST['action'] == "delete") {
     try {
         $id = $_POST['id'];
-        $sql = "delete from product where id = '{$id}'";
-        if ($conn->query($sql)) {
+        $param = [
+            "productId" => $_POST['id'], 
+          
+        ];
+        $sql = "delete from product where id= :productId";
+        if ($conn->ManageData($sql,$param)) {
             echo 1;
         } else {
             echo 0;
@@ -108,8 +110,8 @@ if ($_POST['action'] == "delete") {
 if ($_POST['action'] == "edit") {
     try {
         $id = $_POST['id'];
-        $sql = "select * from product where id  = {$id}";
-        $result = $conn->query($sql);
+        $sql = "select * from product where id  ={$id}";
+        $result = $conn->readSingleRecord($sql);
         $output = " <div class='modal-dialog modal-dialog-centered'>
         <div class='modal-content'>
         <div class='modal-header'>
@@ -117,7 +119,7 @@ if ($_POST['action'] == "edit") {
                 <h4 class='modal-title'>Update Unit</h4>
             </div>
             <form action='' method='post' id='unitFormUpdata'>";
-        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+      //  while ($row = $result) {
             $output .= "<div class='modal-body'>
             <input type='hidden' id='unitId' name='id' value='{$row['id']}' />
             <div class='form-group'>
@@ -133,7 +135,7 @@ if ($_POST['action'] == "edit") {
                 </select>
             </div>
         </div>";
-        }
+      //  }
         $output .= "</form>
         <!-- Modal footer -->
         <div class='modal-footer'>
