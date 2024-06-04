@@ -11,7 +11,7 @@ if ( ! $conn ) {
 } 
 if ($_POST['action'] == "load") {
     try {
-        $sql = "SELECT * FROM product";
+        $sql = "SELECT * FROM tbl_unit";
         $result = $conn->query($sql);
         $sr = 1;
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
