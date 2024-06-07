@@ -16,10 +16,35 @@ jQuery(document).ready(function ($) {
     }
    load_table();
 
+
+   $('#fileUploadId').on('change', function(){
+    var file = this.files[0]; // Get the selected file
+    if (file) {
+        var reader = new FileReader(); // Create a new FileReader object
+        reader.onload = function(e) {
+            $('#logo_image').attr('src', e.target.result); // Set the src attribute of the image with the data URL of the selected file
+        };
+        reader.readAsDataURL(file); // Read the selected file as a data URL
+    }
+});
+
     $("#unitForm12").on("submit", function (e) {
         e.preventDefault();
         var formData = new FormData(this);
-        formData.append('action', 'insert');
+       
+        var id = $('#modalid').val();
+            // console.log('id='.id);
+            if(id =='' || id == undefined){
+                action = 'insert';
+                formData.append("action","insert");
+            }
+            else{
+                action = 'update';
+                var currentImage =  $("#logo_image").attr('src') ?? '';
+                formData.append("image",currentImage);
+                formData.append("action","update");
+            }
+        // formData.append('action', 'insert');
         $.ajax({
             url: "product_controller.php",
             type: "POST",
@@ -28,19 +53,21 @@ jQuery(document).ready(function ($) {
             processData: false,
             dataType: 'json',
             success: function (result) {
-                console.log(result);
+                // console.log(result);
                 if (result.duplicate) {
                     $("#msg").fadeIn().removeClass('sucess-msg').addClass('error-msg').html("Duplicate Record Detected: Please Make Changes.");
                 } else if (result.success) {
-                    $("#msg").fadeIn().removeClass('error-msg').addClass('sucess-msg').html("Saved successful: Your record has been successfully saved.");
+                    $("#msg").fadeIn().removeClass('error-msg').addClass('sucess-msg').html(result.msg);
                    load_table(); // Assuming this function loads the table data
                 } else {
-                    $("#msg").fadeIn().removeClass('sucess-msg').addClass('error-msg').html("Save Failed: Record Not Saved.");
+                    $("#msg").fadeIn().removeClass('sucess-msg').addClass('error-msg').html(result.msg);
                 }
                 setTimeout(function () {
                     $("#msg").fadeOut("slow");
                     $("#unitForm12").trigger("reset");
-                }, 5000);
+                    $("modalid").val('');
+                    $("#logo_image").attr('src','');
+                }, 2000);
             }
         });
     });
@@ -71,12 +98,28 @@ jQuery(document).ready(function ($) {
         var uid = $(this).data("id");
         var uaction = "edit";
         $.ajax({
-            url: "ajax_load.php",
+            url: "product_controller.php",
             type: "POST",
             data: { action: uaction, id: uid },
             success: function (result) {
-                $("#myModalUpdate").html(result);
-                $("#myModalUpdate").modal('show');
+
+                // var filename = $(fileUploadId).val(arr['imgsource']).split('\\').pop();
+                // $('#fileName').text(filename);
+                var arr = JSON.parse(result);
+                // $("#myModalUpdate").html(result);
+                $("#modalid").val(arr['id']);
+                $("#headingId").val(arr['heading']);
+                $("#subHeadingId").val(arr['subheading']);
+
+                // attr('value', fileUrl);
+                $("#fileUploadId").attr('value',arr['imgsource']);
+                $("#logo_image").attr('src',arr['imgsource']);
+                $("#aresId").val(arr['building_area']);
+                $("#bedroomsId").val(arr['bedrooms']);
+                $("#bathroomsId").val(arr['bathroom']);
+                $("#flatTypeId").val(arr['flat_type']);
+                $("#status").val(arr['isActive']);
+                $("#myModal").modal('show');
             }
         });
     });

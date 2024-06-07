@@ -7,7 +7,7 @@
 require_once '../admin/connection.inc.php';
 $conn = new dbConnector();
 if ( ! $conn ) {
-   die( 'Could not connect: ' . mysql_error() );
+//    die( 'Could not connect: ' . mysql_error() );
 } 
 $output = "";
 if ($_POST['action'] == "load") {
@@ -49,7 +49,6 @@ if ($_POST['action'] == "insert") {
        
         if ($_FILES['fileUploadName']['name'] != '') {
             $filename = $_FILES['fileUploadName']['name'];
-           // echo "fileName==".$filename;
             $tempFilePath = $_FILES['fileUploadName']['tmp_name']; // Temporary file path
             $extension = pathinfo($filename, PATHINFO_EXTENSION);
             $path = "uploads/product/";
@@ -122,56 +121,77 @@ if ($_POST['action'] == "edit") {
         $id = $_POST['id'];
         $sql = "select * from product where id  ={$id}";
         $result = $conn->readSingleRecord($sql);
-        $output = " <div class='modal-dialog modal-dialog-centered'>
-        <div class='modal-content'>
-        <div class='modal-header'>
-                <button type='button' class='close' data-dismiss='modal'>&times;</button>
-                <h4 class='modal-title'>Update Unit</h4>
-            </div>
-            <form action='' method='post' id='unitFormUpdata'>";
-      //  while ($row = $result) {
-            $output .= "<div class='modal-body'>
-            <input type='hidden' id='unitId' name='id' value='{$row['id']}' />
-            <div class='form-group'>
-                <label for='unitname'>Unit</label>
-                <input class='form-control type='text' id='editunitname' name='unitname' value='{$row['unit']}' placeholder='Enter Unit' required>
-            </div>
-            <div class='form-group'>
-                <label for='Status'>Status</label>
-                <select class='form-control' name='status' id='editstatus' value='{$row['status']}>
-                    <option value='' selected>Select</option>
-                    <option value='1'>Active</option>
-                    <option value='0'>Inactive</option>
-                </select>
-            </div>
-        </div>";
-      //  }
-        $output .= "</form>
-        <!-- Modal footer -->
-        <div class='modal-footer'>
-            <button type='submit' class='btn btn-primary btnUpdate' id='btnUpdate' data-id='update'>Update</button>
-            <button type='button' class='btn btn-secondary' data-dismiss='modal'>Close</button>
-        </div>
-        <div class='alert alert-dark' id='hmsg' style='display:none;'></div>
-    </div>
-</div>";
+       echo json_encode($result);
     } catch (PDOException $e) {
         echo "Connection failed: " . $e->getMessage();
     }
     echo $output;
 }
 
+// if ($_POST['action'] == "update") {
+//     try {
+//         $id = $_POST['id'];
+//         $sql = "update tbl_unit set unit = '{$_POST['unit']}', status='{$_POST['status']}' where id  = {$id}";
+//         // if ($conn->query($sql)) {
+//         //     echo 1;
+//         // } else {
+//         //     echo 0;
+//         // }
+//     } catch (PDOException $e) {
+//         echo "Connection failed: " . $e->getMessage();
+//     }
+//     echo $output;
+// }
+
+
+
 if ($_POST['action'] == "update") {
     try {
+        $targetFile = "";
+        $saveRecord = true;
+        if (isset($_FILES["fileUploadName"]) && $_FILES["fileUploadName"]["name"] != "") {
+
+            $filename = $_FILES['fileUploadName']['name'];
+            $tempFilePath = $_FILES['fileUploadName']['tmp_name']; // Temporary file path
+            $extension = pathinfo($filename, PATHINFO_EXTENSION);
+            $path = "uploads/product/";
+            $destinationFilePath = $path.$filename;
+            $uploadOk = 1;
+            
+            // $targetDir = "../images/";
+            // $targetFile = $targetDir . $_FILES["image"]["name"];
+            // $uploadOk = 1;
+            // $imageFileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
+            // Validation here
+            if ($_FILES["fileUploadName"]["name"] !== "") {
+                if (move_uploaded_file($tempFilePath, $destinationFilePath)) {
+                    $saveRecord = true;
+                } else {
+                    $saveRecord = false;
+                    echo json_encode(array('success' => false, 'msg' => 'Error File Path! Record not saved'));
+                    exit;
+                }
+            }
+        }
+        else if(isset($_POST['image']) && $_POST['image']!=''){
+            // echo $_POST['image'];
+            $destinationFilePath = $_POST['image'];
+        }
         $id = $_POST['id'];
-        $sql = "update tbl_unit set unit = '{$_POST['unit']}', status='{$_POST['status']}' where id  = {$id}";
-        if ($conn->query($sql)) {
-            echo 1;
+        //get old record for user log
+        // $sql = "select * from tbl_products where id=:id";
+        // $params = ["id" => $_POST["id"]];
+        // $oldRecord = $db->readSingleRecord($sql, $params);
+        
+        $sql = "update  product set heading=:heading,subheading=:subheading, imgsource=:imgsource,building_area=:building_area,bedrooms=:bedrooms,bathroom=:bathroom,flat_type=:flat_type,isActive=:isActive where id=:id";
+        $params = ['id'=>$id, 'heading' => $_POST['headingName'],'subheading' => $_POST['subHeadingName'],'imgsource' =>$destinationFilePath, 'building_area' => $_POST['buildingArea'], 'bedrooms' => $_POST['bedRooms'], 'bathroom' => $_POST['bathRooms'] , 'flat_type' => $_POST['flatType'] ,'isActive' => $_POST['status']];
+        $recordId = $conn->ManageData($sql, $params);
+        if ($recordId) {
+            echo json_encode(array("success" => true, "msg" => "Success: record updated successfully."));
         } else {
-            echo 0;
+            echo json_encode(array("success" => false, "msg" => "Error! Record not updated"));
         }
     } catch (PDOException $e) {
         echo "Connection failed: " . $e->getMessage();
     }
-    echo $output;
 }

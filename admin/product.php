@@ -42,8 +42,9 @@ require('../admin/template/top.inc.php');
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="productfile">File Upload</label>
-                                                    <input class="form-control"  type="file" placeholder="Enter Image" id="fileUploadId" name="fileUploadName" required>
+                                                    <input class="form-control"  type="file" placeholder="Enter Image" id="fileUploadId" name="fileUploadName">
                                                 </div>
+                                                <img src="" alt="logo image" id="logo_image" name="logo_image" onerror="this.onerror=null; this.src='uploads/product/favicon.png'" height="20%" width="20%"/>
                                                 <div class="form-group">
                                                     <label for="buildingArea">Building Area</label>
                                                     <input class="form-control" type="text" placeholder="Enter Area" id="aresId" name="buildingArea">
